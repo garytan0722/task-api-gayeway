@@ -9,8 +9,8 @@ A lightweight task management RESTful API written in Go, using Cobra CLI and `ht
 Build and test locally:
 
 ```bash
-# Build for Linux platform (binary output in ./bin)
-make build
+# Build for local platform (binary output in ./bin)
+make build-local
 
 # Run local unit tests (includes auth checks)
 make test

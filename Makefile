@@ -9,11 +9,15 @@ build:
 	@echo "Building..."
 	@env CGO_ENABLED=0 GOOS=linux go build -o $(BIN_DIR)/$(APP_NAME) ./main.go
 
+build-local:
+	@echo "Building for local platform..."
+	go build -o $(BIN_DIR)/$(APP_NAME) ./main.go
+
 test:
 	@echo "Running unit tests..."
 	go test -v ./...
 
-run: lint build
+run: lint build-local
 	@echo "Running $(APP_NAME)..."
 	./$(BIN_DIR)/$(APP_NAME)
 
