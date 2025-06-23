@@ -1,15 +1,24 @@
-FROM golang:1.18-alpine
+FROM golang:1.23 AS builder
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod tidy
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY . .
 
-RUN go build -o ./out
+RUN make build 
+
+FROM alpine:3.17
+
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /app
+
+COPY --from=builder /app/bin/taskd ./
+
+COPY config.yaml ./
 
 EXPOSE 8080
 
-CMD ["/taskd"]
+ENTRYPOINT ["./taskd"]

@@ -5,9 +5,9 @@ BIN_DIR = bin
 
 all: build
 
-build: lint
+build: 
 	@echo "Building..."
-	go build -o $(BIN_DIR)/$(APP_NAME) ./main.go
+	@env CGO_ENABLED=0 GOOS=linux go build -o $(BIN_DIR)/$(APP_NAME) ./main.go
 
 test:
 	@echo "Running unit tests..."
@@ -23,3 +23,13 @@ clean:
 
 lint:
 	golangci-lint run -v --color=always --out-format=colored-line-number
+
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t task-api-gateway .
+
+docker-run: docker-build
+	@echo "Running Docker container..."
+	docker run -d --name task-api \
+	  -p 8080:8080 \
+	  task-api-gateway --log-level=debug
