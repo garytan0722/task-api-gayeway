@@ -41,6 +41,16 @@ func TestCreateTask(t *testing.T) {
 	assert.NotEmpty(t, resp["id"])
 }
 
+func TestCreateTaskInvalidStatus(t *testing.T) {
+	mux := router.SetupRouter()
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", "/tasks", strings.NewReader(`{"name": "Task1", "status": 2}`))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(authHeader, authToken)
+	mux.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+}
+
 func TestGetTasks(t *testing.T) {
 	mux := router.SetupRouter()
 	wCreate := httptest.NewRecorder()
